@@ -1,0 +1,83 @@
+import random
+
+# Define constants
+w = 0.75
+c1 = 1.5
+c2 = 2
+max_iterations = 1000  # Define your desired maximum iterations
+tolerance = 1e-6  # Define a tolerance for convergence
+
+# Define the equation
+def equation(x1, x2):
+    return (1 - x1**2)**2 + (1 - x2)**2
+
+# Initialize particles and velocities
+particles = [
+    [-4, -4], [-2, -2], [1, -1], [2, -1], [4, -1]
+]  # Initial positions of particles x1 and x2
+velocities = [
+    [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]
+]  # Initial velocities of particles v1 and v2
+
+# Initialize personal best positions and values
+p_best_positions = particles.copy()
+p_best_values = [equation(p[0], p[1]) for p in particles]
+
+# Initialize global best position and value
+g_best_index = p_best_values.index(min(p_best_values))
+g_best_position = particles[g_best_index][:]
+g_best_value = p_best_values[g_best_index]
+
+# Define the update function
+def update_particles():
+    global particles, velocities, p_best_positions, p_best_values, g_best_position, g_best_value
+
+    for i in range(len(particles)):
+        r1 = random.uniform(0, 1)
+        r2 = random.uniform(0, 1)
+
+        # Update velocity
+        velocities[i][0] = (
+            w * velocities[i][0]
+            + c1 * r1 * (p_best_positions[i][0] - particles[i][0])
+            + c2 * r2 * (g_best_position[0] - particles[i][0])
+        )
+        velocities[i][1] = (
+            w * velocities[i][1]
+            + c1 * r1 * (p_best_positions[i][1] - particles[i][1])
+            + c2 * r2 * (g_best_position[1] - particles[i][1])
+        )
+
+        # Update position
+        particles[i][0] += velocities[i][0]
+        particles[i][1] += velocities[i][1]
+
+        # Bound particles within the range [-5, 5]
+        particles[i][0] = max(min(particles[i][0], 5), -5)
+        particles[i][1] = max(min(particles[i][1], 5), -5)
+
+        # Update personal best
+        current_value = equation(particles[i][0], particles[i][1])
+        if current_value < p_best_values[i]:
+            p_best_values[i] = current_value
+            p_best_positions[i] = particles[i][:]
+
+        # Update global best
+        if current_value < g_best_value:
+            g_best_value = current_value
+            g_best_position = particles[i][:]
+
+# Optimize the equation
+iterations = 0
+while iterations < max_iterations:
+    update_particles()
+
+    # Check for convergence
+    if all(abs(p_best_val - g_best_value) < tolerance for p_best_val in p_best_values):
+        break
+
+    iterations += 1
+
+print(f"Converged after {iterations} iterations")
+print(f"Optimal solution: x1 = {g_best_position[0]}, x2 = {g_best_position[1]}")
+print(f"Optimal value of f(x): {g_best_value}")
