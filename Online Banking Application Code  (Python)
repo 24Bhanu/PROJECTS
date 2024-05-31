@@ -1,171 +1,168 @@
-import math
-print("Wellcome to the OnlineBanking Application")
+print("Welcome to the Online Banking Application")
+
+# Initialize global variables
+name = ""
+pin = ""
+cb = 0  # current balance
+
 def signin():
-    global name #username
-    global pin  #password
-    global cb   #current balance
-    name = str(input("Please create your username : "))
-    pin = str(input("Please create your pin : "))
+    global name  # username
+    global pin   # password
+    name = input("Please create your username: ")
+    pin = input("Please create your pin: ")
     if len(pin) == 6:
         pin = pin
     else:
         print("Pin must be 6 digits")
-        newpin = str(input("Please create your pin : "))
+        newpin = input("Please create your pin: ")
         if len(newpin) != 6:
             print("Pin must be 6 digits")
             signin()
         else:
             pin = newpin
-    print("Your Account is succesfully created")
+    print("Your Account is successfully created")
 
 def forgotpin():
-    name = str(input("Please create your username : "))
-    recoverpin = str(input("Please enter your new pin : "))
+    global pin
+    name = input("Please create your username: ")
+    recoverpin = input("Please enter your new pin: ")
     if len(recoverpin) != 6:
         print("Pin must be 6 digits")
         forgotpin()
     else:
-        print("New pin created,Please login")
+        print("New pin created, Please login")
         pin = recoverpin
 
-def depositeinterest(p,r,t):
-    # A = Pe^(rt) formula for calculating compound interest
-    p=float(p)
-    r=float(r)
-    t=float(t)
-    rt = r*t
+def depositeinterest(p, r, t):
+    import math
+    p = float(p)
+    r = float(r)
+    t = float(t)
+    rt = r * t
     e = math.exp(rt)
 
-    #calculation
-    a = p * e # future value of your investment
+    # calculation
+    a = p * e  # future value of your investment
     return a
 
 def login():
-    # make1 represents username
-    # pin 1 represents pin
-    name1 = str(input("Please eter your username : "))
-    pin1 = str(input("Please enter your pin : "))
+    global cb  # Use the global current balance
+    name1 = input("Please enter your username: ")
+    pin1 = input("Please enter your pin: ")
     # check if name and pin matched
     if name1 == name and pin1 == pin:
-        print("Welcome to onine banking appication" + " " + name)
+        print("Welcome to online banking application " + name)
         print("Please choose the menu down here")
-        listmenu = ["1-deposite", "2-withdraw","3-transfer","4-checkbalance","5-deposite interesr rate","6-calculate compound interest"]
+        listmenu = ["1-deposit", "2-withdraw", "3-transfer", "4-check balance", "5-deposit interest rate", "6-calculate compound interest"]
         for b in listmenu:
             print(b)
-        choose = int(input("please enter the number of your choice : "))
-        d=0 # d - deposite money
-        w=0 # w - withdraw
-        cb=0 #cb - current balance
+        choose = int(input("Please enter the number of your choice: "))
         if choose == 1:
-            d = int(input("Please enter the amount of your deposite"))
-            cb = d
-            print("amount is successfully deposited" + " " +" your current balance is : "+str(cb))
+            d = int(input("Please enter the amount of your deposit: "))
+            cb += d
+            print("Amount is successfully deposited. Your current balance is: " + str(cb))
         elif choose == 2:
-            w = int(input("Please enter the amount : "))
+            w = int(input("Please enter the amount: "))
             if w > cb:
-                print("your current balce is not sufficient for this transaction")
+                print("Your current balance is not sufficient for this transaction")
                 login()
             else:
-                cb = cb-w
-                print(str(w)+" "+" has been withdrawn"+" "+"your current balance is : "+str(cb))
+                cb -= w
+                print(str(w) + " has been withdrawn. Your current balance is: " + str(cb))
         elif choose == 3:
-            dest = str(input("Please enter the receiver account number (8-digit) : "))
-            if len(dest) ==8:
-                amount == int(input("Enter the amount : "))
-                if amount>cb:
-                    print("Your current balce is not sufficient for this transaction")
+            dest = input("Please enter the receiver account number (8-digit): ")
+            if len(dest) == 8:
+                amount = int(input("Enter the amount: "))
+                if amount > cb:
+                    print("Your current balance is not sufficient for this transaction")
                     login()
                 else:
-                    cb=cb-amount
-                    print(str(amount) +" " +"Transferd successfully to" + " " +str(dest)+" "  + "your current balance is : "+str(cb))
+                    cb -= amount
+                    print(str(amount) + " transferred successfully to " + dest + ". Your current balance is: " + str(cb))
             else:
                 print("The account number is invalid")
                 login()
         elif choose == 4:
-            print( "your current balance is : "+str(cb))
+            print("Your current balance is: " + str(cb))
         elif choose == 5:
-            if d > 50000:
+            if cb > 50000:
                 rate = 3
-            elif d > 30000:
+            elif cb > 30000:
                 rate = 2
             else:
                 rate = 1.5
-            print("your current balnce interest rate is"+" "+ str(rate)+"%")
+            print("Your current balance interest rate is " + str(rate) + "%")
         elif choose == 6:
-            listoption = ["1-calculate your deposite coumpound interest based on your current balance","2-calculate your deposite coumpound interest based on your current input"]
+            listoption = ["1-calculate your deposit compound interest based on your current balance", "2-calculate your deposit compound interest based on your current input"]
             for n in listoption:
                 print(n)
-            choice = int(input("Please enter your choice from the options above :  "))
+            choice = int(input("Please enter your choice from the options above: "))
             if choice == 1:
-                time = str(input("Time pedriod of investment : "))
-                if d>50000:
-                    ratex = 3/100
-                elif d > 30000:
-                    ratex = 2/100
+                time = float(input("Time period of investment (in years): "))
+                if cb > 50000:
+                    ratex = 3 / 100
+                elif cb > 30000:
+                    ratex = 2 / 100
                 else:
-                    ratex = 1.5/100
-                print("your current balance in"+" "+str(time)+" "+ "is")
-                print(depositeinterest(cb,ratex,time))
+                    ratex = 1.5 / 100
+                print("Your current balance in " + str(time) + " years is: ")
+                print(depositeinterest(cb, ratex, time))
             elif choice == 2:
-                time1 = str(input("Time pedriod of investment : "))
-                money = str(input("please enter the amount : "))
-                money = int(money)
-                if d>50000:
-                    ratex = 3/100
-                elif d > 30000:
-                    ratex = 2/100
+                time1 = float(input("Time period of investment (in years): "))
+                money = float(input("Please enter the amount: "))
+                if money > 50000:
+                    ratex = 3 / 100
+                elif money > 30000:
+                    ratex = 2 / 100
                 else:
-                    ratex = 1.5/100
-                print("your current balance in"+" "+str(time)+" "+ "is")
-                print(depositeinterest(money,ratex,time1))
+                    ratex = 1.5 / 100
+                print("Your current balance in " + str(time1) + " years is: ")
+                print(depositeinterest(money, ratex, time1))
             else:
-                print("option not available,redirecting to main menu")
+                print("Option not available, redirecting to main menu")
                 login()
-
     else:
-        print("Either of your username or pin is wrong,did you create your account")
-        list1 = ["1-yes","2-no"]
+        print("Either your username or pin is wrong, did you create your account?")
+        list1 = ["1-yes", "2-no"]
         for i in list1:
             print(i)
-        inp = int(input("Enter your choice : "))
+        inp = int(input("Enter your choice: "))
         if inp == 1:
-            list2 = ["1-do you want to attempt login again","2-forgot pin"]
+            list2 = ["1-do you want to attempt login again", "2-forgot pin"]
             for e in list2:
                 print(e)
-            theanswer = str(input("Please enter your choice"))
-            theanswer = int(theanswer)
+            theanswer = int(input("Please enter your choice: "))
             if theanswer == 1:
                 login()
             elif theanswer == 2:
                 forgotpin()
             else:
-                print("option is not available")
+                print("Option is not available")
                 login()
         elif inp == 2:
             print("Please create your account")
             signin()
     exit()
+
 def mainmenu():
-    option1 = int(input("choose 1 to signin  and chhose 2 to login"))
+    option1 = int(input("Choose 1 to sign in and choose 2 to log in: "))
     if option1 == 1:
         signin()
     elif option1 == 2:
         login()
     else:
-        print("option not avilable")
+        print("Option not available")
         mainmenu()
     exit()
+
 def exit():
-    answer = str(input("do you want to continue? Yes or No"))
-    if answer == "Yes":
+    answer = input("Do you want to continue? Yes or No: ")
+    if answer.lower() == "yes":
         login()
-    elif answer == "No":
-        print("thank you for using the aop")
+    elif answer.lower() == "no":
+        print("Thank you for using the app")
     else:
-        print("option not avilable")
+        print("Option not available")
         mainmenu()
 
 mainmenu()
-
-
-
