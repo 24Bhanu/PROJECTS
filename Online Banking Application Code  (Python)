@@ -24,7 +24,7 @@ def signin():
 
 def forgotpin():
     global pin
-    name = input("Please create your username: ")
+    name = input("Please enter your username: ")
     recoverpin = input("Please enter your new pin: ")
     if len(recoverpin) != 6:
         print("Pin must be 6 digits")
